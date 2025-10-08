@@ -1,0 +1,594 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>3.2) Zimmet Onaylama (GM)</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --panel: #ffffff;
+            --panel-2: #f8fafc;
+            --muted: #6b7280;
+            --text: #111827;
+            --primary: #2563eb;
+            --border: rgba(0,0,0,.10);
+            --radius: 12px;
+            --shadow: 0 6px 24px rgba(0,0,0,.06);
+            --green: #16a34a;
+            --red: #dc2626;
+            --gray: #f3f4f6;
+            --yellow: #f59e0b;
+            --row-green: #dcfce7;
+            --row-red: #fee2e2;
+            --row-yellow: #fef9c3;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+            background: var(--bg);
+            color: var(--text)
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden
+        }
+
+            .card header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px 16px;
+                border-bottom: 1px solid var(--border)
+            }
+
+                .card header h1 {
+                    margin: 0;
+                    font-size: 20px
+                }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: #f3f4f6;
+            border: 1px solid var(--border);
+            color: #374151
+        }
+
+        .content {
+            padding: 18px
+        }
+
+        .actions-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+
+        .top-left, .top-right {
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid var(--border);
+            background: #eef2ff;
+            color: #111827;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block
+        }
+
+            .btn.primary {
+                background: #e0e7ff;
+                border-color: #c7d2fe
+            }
+
+            .btn.success {
+                background: #e7f7ee;
+                border-color: #b4e2c6;
+                color: #065f46
+            }
+
+            .btn.danger {
+                background: #fee2e2;
+                border-color: #fecaca;
+                color: #7f1d1d
+            }
+
+            .btn.ghost {
+                background: transparent
+            }
+
+        .filters {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 12px
+        }
+
+        .row {
+            display: grid;
+            gap: 12px
+        }
+
+        .cols-4 {
+            grid-template-columns: 1fr
+        }
+
+        @media(min-width:1000px) {
+            .cols-4 {
+                grid-template-columns: repeat(4,1fr)
+            }
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--panel-2);
+            color: var(--text)
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical
+        }
+
+        .section {
+            margin-top: 12px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden
+        }
+
+            .section > header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 14px;
+                background: var(--panel-2);
+                border-bottom: 1px solid var(--border)
+            }
+
+                .section > header h2 {
+                    margin: 0;
+                    font-size: 16px
+                }
+
+            .section .sub {
+                color: var(--muted);
+                font-size: 12px
+            }
+
+        .table-wrap {
+            overflow: auto;
+            max-height: 46vh
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: var(--panel-2);
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--muted);
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border)
+        }
+
+        tbody td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            vertical-align: top
+        }
+
+        tbody tr:hover {
+            background: #f9fafb
+        }
+
+        tr.pending {
+            background: var(--row-yellow)
+        }
+
+        tr.approved {
+            background: var(--row-green)
+        }
+
+        tr.rejected {
+            background: var(--row-red)
+        }
+
+        .badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            border: 1px solid var(--border)
+        }
+
+            .badge.wait {
+                background: #fef9c3;
+                border-color: #fde68a;
+                color: #92400e
+            }
+
+        .inline {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        /* Red gerekçesi popup */
+        details.reject {
+            position: relative;
+            display: inline-block
+        }
+
+        summary {
+            list-style: none
+        }
+
+            summary::-webkit-details-marker {
+                display: none
+            }
+
+        details.reject > summary.btn {
+            display: inline-flex;
+            align-items: center
+        }
+
+        .reject-panel {
+            position: absolute;
+            z-index: 2;
+            right: 0;
+            top: 42px;
+            width: 320px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 12px;
+        }
+
+            .reject-panel .actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+                margin-top: 8px
+            }
+
+        .hint {
+            font-size: 12px;
+            color: var(--muted)
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <header>
+                <h1>3.2) Zimmet Onaylama (GM)</h1>
+                <div class="badges">
+                    <span class="chip">Erişim: <strong>GM İdari İşler</strong></span>
+                    <span class="chip">Kapsam: <strong>Tüm Bölgeler</strong></span>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Üst gezinme -->
+                <div class="actions-top">
+                    <div class="top-left"><a class="btn" href="2_arac_listesi.html">Araç Listesi</a></div>
+                    <div class="top-right"><button class="btn ghost" type="button">CSV Dışa Aktar</button></div>
+                </div>
+
+                <!-- Filtreler -->
+                <div class="filters">
+                    <div class="row cols-4">
+                        <div><label>Bölge</label><input placeholder="Marmara / Ege / GM" /></div>
+                        <div><label>Ad Soyad / Sicil</label><input placeholder="Ad / 123456" /></div>
+                        <div><label>Plaka</label><input placeholder="34 ABC 123" /></div>
+                        <div>
+                            <label>Tür</label>
+                            <select>
+                                <option value="">Hepsi</option>
+                                <option selected>Zimmet</option>
+                                <option>Devir</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÜST: Onay Bekleyen (Zimmet + Devir, 10+ örnek) -->
+                <section class="section">
+                    <header>
+                        <h2>Onay Bekleyen Talepler</h2>
+                        <span class="sub">Zimmet ve Devir talepleri; Son KM görünür.</span>
+                    </header>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Talep No</th>
+                                    <th>Tür</th>
+                                    <th>Ad Soyad</th>
+                                    <th>Sicil</th>
+                                    <th>Bölge</th>
+                                    <th>Araç</th>
+                                    <th>Son KM</th>
+                                    <th>Neden</th>
+                                    <th>Devir Bilgisi</th>
+                                    <th>Talep Tarihi</th>
+                                    <th>Statü</th>
+                                    <th>Aksiyon</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- ZİMMET örnekleri -->
+                                <tr class="pending">
+                                    <td>REQ-000901</td>
+                                    <td>Zimmet</td>
+                                    <td>Sinan Halimoğlu</td>
+                                    <td>123456</td>
+                                    <td>İstanbul Sürdışı</td>
+                                    <td>34 ABC 210 — Renault Clio</td>
+                                    <td>41.200</td>
+                                    <td>Görev</td>
+                                    <td>-</td>
+                                    <td>2025-09-02</td>
+                                    <td><span class="badge wait">Onay Bekliyor</span></td>
+                                    <td class="inline">
+                                        <a class="btn" href="#">Talep Detay</a>
+                                        <button class="btn success" type="button">Onay</button>
+                                        <details class="reject">
+                                            <summary class="btn danger">Red</summary>
+                                            <div class="reject-panel">
+                                                <label class="hint">Red Gerekçesi</label>
+                                                <textarea placeholder="En az 10 karakter..."></textarea>
+                                                <div class="actions">
+                                                    <button class="btn ghost" type="button" onclick="this.closest('details').removeAttribute('open')">İptal</button>
+                                                    <button class="btn danger" type="button">Reddet</button>
+                                                </div>
+                                            </div>
+                                        </details>
+                                    </td>
+                                </tr>
+                                <tr class="pending">
+                                    <td>REQ-000902</td>
+                                    <td>Zimmet</td>
+                                    <td>Ayşe Telli</td>
+                                    <td>118902</td>
+                                    <td>İzmir Bölge Md.</td>
+                                    <td>35 XYZ 456 — Fiat Egea</td>
+                                    <td>58.340</td>
+                                    <td>Geçici</td>
+                                    <td>-</td>
+                                    <td>2025-09-03</td>
+                                    <td><span class="badge wait">Onay Bekliyor</span></td>
+                                    <td class="inline"><a class="btn" href="#">Talep Detay</a><button class="btn success" type="button">Onay</button><details class="reject"><summary class="btn danger">Red</summary><div class="reject-panel"><label class="hint">Red Gerekçesi</label><textarea></textarea><div class="actions"><button class="btn ghost" type="button" onclick="this.closest('details').removeAttribute('open')">İptal</button><button class="btn danger" type="button">Reddet</button></div></div></details></td>
+                                </tr>
+                                <tr class="pending">
+                                    <td>REQ-000903</td>
+                                    <td>Zimmet</td>
+                                    <td>Mehmet Demir</td>
+                                    <td>118001</td>
+                                    <td>Ankara Bölge Md.</td>
+                                    <td>06 KLM 789 — VW Polo</td>
+                                    <td>73.980</td>
+                                    <td>Görev</td>
+                                    <td>-</td>
+                                    <td>2025-09-04</td>
+                                    <td><span class="badge wait">Onay Bekliyor</span></td>
+                                    <td class="inline"><a class="btn" href="#">Talep Detay</a><button class="btn success" type="button">Onay</button><details class="reject"><summary class="btn danger">Red</summary><div class="reject-panel"><label class="hint">Red Gerekçesi</label><textarea></textarea><div class="actions"><button class="btn ghost" type="button" onclick="this.closest('details').removeAttribute('open')">İptal</button><button class="btn danger" type="button">Reddet</button></div></div></details></td>
+                                </tr>
+                                <tr class="pending">
+                                    <td>REQ-000904</td>
+                                    <td>Zimmet</td>
+                                    <td>Zeynep Yıldız</td>
+                                    <td>120314</td>
+                                    <td>Antalya Bölge Md.</td>
+                                    <td>07 ANT 707 — Ford Focus</td>
+                                    <td>29.150</td>
+                                    <td>Görev</td>
+                                    <td>-</td>
+                                    <td>2025-09-04</td>
+                                    <td><span class="badge wait">Onay Bekliyor</span></td>
+                                    <td class="inline"><a class="btn" href="#">Talep Detay</a><button class="btn success" type="button">Onay</button><details class="reject"><summary class="btn danger">Red</summary><div class="reject-panel"><label class="hint">Red Gerekçesi</label><textarea></textarea><div class="actions"><button class="btn ghost" type="button" onclick="this.closest('details').removeAttribute('open')">İptal</button><button class="btn danger" type="button">Reddet</button></div></div></details></td>
+                                </tr>
+                                <tr class="pending">
+                                    <td>REQ-000905</td>
+                                    <td>Zimmet</td>
+                                    <td>Ali Çetin</td>
+                                    <td>117777</td>
+                                    <td>Karadeniz Bölge Md.</td>
+                                    <td>55 SAM 055 — Toyota Corolla</td>
+                                    <td>101.420</td>
+                                    <td>Geçici</td>
+                                    <td>-</td>
+                                    <td>2025-09-04</td>
+                                    <td><span class="badge wait">Onay Bekliyor</span></td>
+                                    <td class="inline"><a class="btn" href="#">Talep Detay</a><button class="btn success" type="button">Onay</button><details class="reject"><summary class="btn danger">Red</summary><div class="reject-panel"><label class="hint">Red Gerekçesi</label><textarea></textarea><div class="actions"><button class="btn ghost" type="button" onclick="this.closest('details').removeAttribute('open')">İptal</button><button class="btn danger" type="button">Reddet</button></div></div></details></td>
+                                </tr>
+                                <!-- DEVİR örnekleri -->
+                                <tr class="pending">
+                                    <td>TRF-000230</td>
+                                    <td>Devir</td>
+                                    <td>Murat Şahin</td>
+                                    <td>119999</td>
+                                    <td>Marmara Bölge Md.</td>
+                                    <td>34 MR 234 — Peugeot 301</td>
+                                    <td>88.260</td>
+                                    <td>Görev</td>
+                                    <td>Veren: Ali Çetin → Alan: Murat Şahin (KM: 88.260)</td>
+                                    <td>2025-09-04</td>
+                                    <td><span class="badge wait">Onay Bekliyor</span></td>
+                                    <td class="inline"><a class="btn" href="#">Talep Detay</a><button class="btn success" type="button">Onay</button><details class="reject"><summary class="btn danger">Red</summary><div class="reject-panel"><label class="hint">Red Gerekçesi</label><textarea></textarea><div class="actions"><button class="btn ghost" type="button" onclick="this.closest('details').removeAttribute('open')">İptal</button><button class="btn danger" type="button">Reddet</button></div></div></details></td>
+                                </tr>
+                                <tr class="pending">
+                                    <td>TRF-000231</td>
+                                    <td>Devir</td>
+                                    <td>Elif Kaya</td>
+                                    <td>116666</td>
+                                    <td>İzmir Bölge Md.</td>
+                                    <td>35 IZM 035 — Hyundai i20</td>
+                                    <td>66.005</td>
+                                    <td>Görev</td>
+                                    <td>Veren: Ayşe Telli → Alan: Elif Kaya (KM: 66.005)</td>
+                                    <td>2025-09-04</td>
+                                    <td><span class="badge wait">Onay Bekliyor</span></td>
+                                    <td class="inline"><a class="btn" href="#">Talep Detay</a><button class="btn success" type="button">Onay</button><details class="reject"><summary class="btn danger">Red</summary><div class="reject-panel"><label class="hint">Red Gerekçesi</label><textarea></textarea><div class="actions"><button class="btn ghost" type="button" onclick="this.closest('details').removeAttribute('open')">İptal</button><button class="btn danger" type="button">Reddet</button></div></div></details></td>
+                                </tr>
+                                <tr class="pending">
+                                    <td>TRF-000232</td>
+                                    <td>Devir</td>
+                                    <td>Sevim Acar</td>
+                                    <td>115555</td>
+                                    <td>Doğu Anadolu Bölge Md.</td>
+                                    <td>25 ERZ 025 — Dacia Sandero</td>
+                                    <td>23.410</td>
+                                    <td>Görev</td>
+                                    <td>Veren: Berk Yılmaz → Alan: Sevim Acar (KM: 23.410)</td>
+                                    <td>2025-09-04</td>
+                                    <td><span class="badge wait">Onay Bekliyor</span></td>
+                                    <td class="inline"><a class="btn" href="#">Talep Detay</a><button class="btn success" type="button">Onay</button><details class="reject"><summary class="btn danger">Red</summary><div class="reject-panel"><label class="hint">Red Gerekçesi</label><textarea></textarea><div class="actions"><button class="btn ghost" type="button" onclick="this.closest('details').removeAttribute('open')">İptal</button><button class="btn danger" type="button">Reddet</button></div></div></details></td>
+                                </tr>
+                                <tr class="pending">
+                                    <td>TRF-000233</td>
+                                    <td>Devir</td>
+                                    <td>Berk Yılmaz</td>
+                                    <td>114444</td>
+                                    <td>Güneydoğu Anadolu Bölge Md.</td>
+                                    <td>21 DIY 021 — Renault Megane</td>
+                                    <td>94.730</td>
+                                    <td>Geçici</td>
+                                    <td>Veren: Canan Koç → Alan: Berk Yılmaz (KM: 94.730)</td>
+                                    <td>2025-09-04</td>
+                                    <td><span class="badge wait">Onay Bekliyor</span></td>
+                                    <td class="inline"><a class="btn" href="#">Talep Detay</a><button class="btn success" type="button">Onay</button><details class="reject"><summary class="btn danger">Red</summary><div class="reject-panel"><label class="hint">Red Gerekçesi</label><textarea></textarea><div class="actions"><button class="btn ghost" type="button" onclick="this.closest('details').removeAttribute('open')">İptal</button><button class="btn danger" type="button">Reddet</button></div></div></details></td>
+                                </tr>
+                                <tr class="pending">
+                                    <td>TRF-000234</td>
+                                    <td>Devir</td>
+                                    <td>Canan Koç</td>
+                                    <td>113333</td>
+                                    <td>İç Anadolu Bölge Md.</td>
+                                    <td>42 KON 042 — Skoda Octavia</td>
+                                    <td>52.890</td>
+                                    <td>Görev</td>
+                                    <td>Veren: Hasan Koç → Alan: Canan Koç (KM: 52.890)</td>
+                                    <td>2025-09-04</td>
+                                    <td><span class="badge wait">Onay Bekliyor</span></td>
+                                    <td class="inline"><a class="btn" href="#">Talep Detay</a><button class="btn success" type="button">Onay</button><details class="reject"><summary class="btn danger">Red</summary><div class="reject-panel"><label class="hint">Red Gerekçesi</label><textarea></textarea><div class="actions"><button class="btn ghost" type="button" onclick="this.closest('details').removeAttribute('open')">İptal</button><button class="btn danger" type="button">Reddet</button></div></div></details></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="hint" style="padding:10px 12px">Son KM, <em>Aracım</em> ekranındaki en güncel km logundan çekilir.</div>
+                </section>
+
+                <!-- ALT: Onaylanan Talepler -->
+                <section class="section">
+                    <header><h2>Onaylanan Talepler</h2><span class="sub">Zimmet ve Devir onayları</span></header>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Talep No</th>
+                                    <th>Tür</th>
+                                    <th>Ad Soyad</th>
+                                    <th>Sicil</th>
+                                    <th>Bölge</th>
+                                    <th>Araç</th>
+                                    <th>Son KM</th>
+                                    <th>Neden</th>
+                                    <th>Devir Bilgisi</th>
+                                    <th>Onay Tarihi</th>
+                                    <th>Statü</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="approved"><td>REQ-000880</td><td>Zimmet</td><td>Özgür Arslan</td><td>112210</td><td>Marmara Bölge Md.</td><td>34 MRM 034 — Renault Taliant</td><td>39.600</td><td>Görev</td><td>-</td><td>2025-08-30</td><td><span class="badge">Onaylandı</span></td></tr>
+                                <tr class="approved"><td>TRF-000220</td><td>Devir</td><td>İpek Güneş</td><td>112211</td><td>Ege Bölge Md.</td><td>35 EGE 035 — Toyota Yaris</td><td>24.900</td><td>Geçici</td><td>Veren: Hasan Koç → Alan: İpek Güneş (KM: 24.900)</td><td>2025-08-29</td><td><span class="badge">Onaylandı</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- ALT: Reddedilen Talepler -->
+                <section class="section">
+                    <header><h2>Reddedilen Talepler</h2><span class="sub">Gerekçeler talep detayında saklanır</span></header>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Talep No</th>
+                                    <th>Tür</th>
+                                    <th>Ad Soyad</th>
+                                    <th>Sicil</th>
+                                    <th>Bölge</th>
+                                    <th>Araç</th>
+                                    <th>Son KM</th>
+                                    <th>Neden</th>
+                                    <th>Devir Bilgisi</th>
+                                    <th>Red Tarihi</th>
+                                    <th>Statü</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="rejected"><td>TRF-000221</td><td>Devir</td><td>Kenan Taş</td><td>112215</td><td>İç Anadolu</td><td>42 KNY 042 — Opel Corsa</td><td>83.700</td><td>Geçici</td><td>Veren: Emre Yalçın → Alan: Kenan Taş (KM: 83.700)</td><td>2025-08-28</td><td><span class="badge">Reddedildi</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

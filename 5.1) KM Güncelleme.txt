@@ -1,0 +1,442 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>5.1) KM Güncelleme</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --panel: #ffffff;
+            --panel-2: #f8fafc;
+            --muted: #6b7280;
+            --text: #111827;
+            --primary: #2563eb;
+            --border: rgba(0,0,0,.10);
+            --radius: 12px;
+            --shadow: 0 6px 24px rgba(0,0,0,.06);
+            --chip: #eef2ff;
+            --warn: #fef3c7;
+            --ok: #dcfce7;
+            --danger: #fee2e2;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+            background: var(--bg);
+            color: var(--text)
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden
+        }
+
+            .card header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px 16px;
+                border-bottom: 1px solid var(--border)
+            }
+
+                .card header h1 {
+                    margin: 0;
+                    font-size: 20px
+                }
+
+        .actions-top {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid var(--border);
+            background: #eef2ff;
+            color: #111827;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block
+        }
+
+            .btn.primary {
+                background: #e0e7ff;
+                border-color: #c7d2fe
+            }
+
+            .btn.ghost {
+                background: transparent
+            }
+
+            .btn.danger {
+                background: var(--danger);
+                border-color: #fca5a5
+            }
+
+            .btn.disabled {
+                opacity: .5;
+                pointer-events: none
+            }
+
+        .content {
+            padding: 18px
+        }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 12px
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: var(--chip);
+            border: 1px solid var(--border);
+            color: #1f2937
+        }
+
+        .section {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 16px
+        }
+
+            .section > header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 14px;
+                background: var(--panel-2);
+                border-bottom: 1px solid var(--border)
+            }
+
+                .section > header h2 {
+                    margin: 0;
+                    font-size: 16px
+                }
+
+        .inner {
+            padding: 14px 16px
+        }
+
+        .form {
+            display: grid;
+            gap: 14px
+        }
+
+        .row {
+            display: grid;
+            gap: 12px
+        }
+
+        .cols-2 {
+            grid-template-columns: 1fr
+        }
+
+        .cols-3 {
+            grid-template-columns: 1fr
+        }
+
+        @media(min-width:920px) {
+            .cols-2 {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .cols-3 {
+                grid-template-columns: repeat(3,1fr)
+            }
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--panel-2);
+            color: var(--text)
+        }
+
+            input[readonly] {
+                background: #f3f4f6;
+                color: #6b7280
+            }
+
+            input[type=file] {
+                padding: 8px
+            }
+
+        textarea {
+            min-height: 96px;
+            resize: vertical
+        }
+
+        .meter-box {
+            display: grid;
+            gap: 8px
+        }
+
+        meter {
+            width: 100%;
+            height: 12px
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .actions-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px
+        }
+
+        .note {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .table-wrap {
+            overflow: auto;
+            max-height: 52vh
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: var(--panel-2);
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--muted);
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border)
+        }
+
+        tbody td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px
+        }
+
+        tbody tr:hover {
+            background: #f9fafb
+        }
+
+        .badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            border: 1px solid var(--border)
+        }
+
+        .recent {
+            background: var(--ok)
+        }
+        /* son kayıt vurgusu */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <header>
+                <h1>5.1) KM Güncelleme</h1>
+                <div class="actions-top">
+                    <a class="btn" href="5_aracim.html">← Aracım</a>
+                    <a class="btn ghost" href="6_arac_gecmisi.html" title="Tüm geçmiş">Araç Geçmişi</a>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Özet chip'ler -->
+                <div class="badges">
+                    <span class="chip">ObjId: <strong>VHC-000210</strong></span>
+                    <span class="chip">Plaka: <strong>34 MR 234</strong></span>
+                    <span class="chip">Sözleşme KM: <strong>120.000</strong></span>
+                    <span class="chip">Son Kayıtlı KM: <strong>88.260</strong> (2025-08-20)</span>
+                </div>
+
+                <!-- FORM -->
+                <section class="section">
+                    <header>
+                        <h2>Yeni KM Kaydı</h2>
+
+                    </header>
+                    <div class="inner">
+                        <form class="form" aria-label="KM Güncelleme Formu">
+                            <div class="row cols-2">
+                                <div>
+                                    <label>Plaka</label>
+                                    <input value="34 MR 234" readonly />
+                                </div>
+                                <div>
+                                    <label>Güncelleme Tarihi</label>
+                                    <input type="date" value="2025-09-09" />
+                                </div>
+                            </div>
+
+                            <div class="row cols-3">
+                                <div>
+                                    <label>Son KM (ro)</label>
+                                    <input type="number" value="88260" readonly />
+                                </div>
+                                <div>
+                                    <label>Güncel KM <span class="note">(son KM'den küçük olamaz)</span></label>
+                                    <input type="number" min="0" placeholder="Örn. 90250" />
+                                </div>
+                                <div>
+                                    <label>Sözleşme KM Limiti (ro)</label>
+                                    <input type="number" value="120000" readonly />
+                                </div>
+                            </div>
+
+                            <div class="row cols-2">
+                                <div class="meter-box">
+                                    <label>KM Kullanımı</label>
+                                    <meter min="0" max="120000" value="88260">88.260/120.000</meter>
+                                    <span class="hint">Kalan ≈ 31.740 km</span>
+                                </div>
+                                <div>
+                                    <label>Odometre Fotoğrafı (opsiyonel)</label>
+                                    <input type="file" accept="image/*" />
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label>Açıklama <span class="note">(günlük artış &gt; 1.500 km ise zorunlu)</span></label>
+                                <textarea placeholder="Kısa açıklama (örn. uzun yol, görev vb.)"></textarea>
+                            </div>
+
+                            <div class="actions-bottom">
+                                <div class="left">
+                                    <a class="btn" href="5_aracim.html">← Aracım</a>
+                                </div>
+                                <div class="right" style="display:flex;gap:10px">
+                                    <button class="btn ghost" type="reset">Temizle</button>
+                                    <button class="btn primary" type="button">Kaydet</button>
+                                </div>
+                            </div>
+
+                            <div class="note" style="margin-top:8px">
+
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- LOG (aynı sayfada) -->
+                <section class="section">
+                    <header>
+                        <h2>KM Log</h2>
+
+                    </header>
+                    <div class="inner">
+                        <div class="table-wrap">
+                            <table aria-label="KM Log Tablosu">
+                                <thead>
+                                    <tr>
+                                        <th>Tarih-Saat</th>
+                                        <th>KM</th>
+                                        <th>Önceki KM</th>
+                                        <th>Artış</th>
+                                        <th>Sözleşme KM</th>
+                                        <th>Kalan KM</th>
+                                        <th>Aksiyon</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- SON KAYIT: düzenlenebilir (30 dk) -->
+                                    <tr class="recent">
+                                        <td>2025-09-09 10:05</td>
+                                        <td>90.250</td>
+                                        <td>88.260</td>
+                                        <td>1.990</td>
+                                        <td>120.000</td>
+                                        <td>29.750</td>
+                                        <td style="display:flex;gap:8px;flex-wrap:wrap">
+                                            <button class="btn" type="button" title="30 dk içinde düzenlenebilir">Düzelt (30 dk)</button>
+                                            <button class="btn danger" type="button" title="Yanlış giriş ise 30 dk içinde iptal">İptal (30 dk)</button>
+                                        </td>
+                                    </tr>
+                                    <!-- Eski kayıtlar: düzeltme kapalı -->
+                                    <tr>
+                                        <td>2025-08-20 09:12</td>
+                                        <td>88.260</td>
+                                        <td>82.500</td>
+                                        <td>5.760</td>
+                                        <td>120.000</td>
+                                        <td>31.740</td>
+                                        <td><span class="badge">Düzeltme kapalı</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-06-15 14:03</td>
+                                        <td>82.500</td>
+                                        <td>76.100</td>
+                                        <td>6.400</td>
+                                        <td>120.000</td>
+                                        <td>37.500</td>
+                                        <td><span class="badge">Düzeltme kapalı</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-04-15 10:27</td>
+                                        <td>76.100</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>120.000</td>
+                                        <td>43.900</td>
+                                        <td><span class="badge">Düzeltme kapalı</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="note" style="margin-top:8px">
+
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

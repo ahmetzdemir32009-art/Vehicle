@@ -1,0 +1,630 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Araç Listesi — Aktif & Pasif (Sinyal Noktası)</title>
+    <style>
+        /* (İlk gönderdiğin temel stiller) */
+        :root {
+            --bg: #fff;
+            --panel: #fff;
+            --panel-2: #f8fafc;
+            --muted: #6b7280;
+            --text: #111827;
+            --border: rgba(0,0,0,.10);
+            --radius: 12px;
+            --shadow: 0 6px 24px rgba(0,0,0,.06);
+            --chip: #f3f4f6;
+            --lvl1: #e6f2ff;
+            --lvl2: #fff2cc;
+            --lvl3: #fde68a;
+            --lvl4: #dcfce7;
+            --crit: #fee2e2;
+            --tab-on: #e0e7ff;
+            --tab-on-border: #c7d2fe;
+            --passive: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+            background: var(--bg);
+            color: var(--text)
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow)
+        }
+
+            .card header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px 16px;
+                border-bottom: 1px solid var(--border)
+            }
+
+                .card header h1 {
+                    margin: 0;
+                    font-size: 20px
+                }
+
+        .content {
+            padding: 18px
+        }
+
+        .actions-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid var(--border);
+            background: #eef2ff;
+            color: #111827;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: none;
+            display: inline-block;
+            line-height: 1
+        }
+
+            .btn.primary {
+                background: var(--tab-on);
+                border-color: var(--tab-on-border)
+            }
+
+            .btn.ghost {
+                background: transparent
+            }
+
+            .btn[aria-disabled="true"] {
+                opacity: .55;
+                cursor: not-allowed;
+                pointer-events: none;
+                background: #fff
+            }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 6px 0 12px
+        }
+
+            .tabs label {
+                border: 1px solid var(--border);
+                background: #fff;
+                color: var(--text);
+                padding: 8px 12px;
+                border-radius: 999px;
+                font-size: 12px;
+                cursor: pointer;
+                line-height: 1
+            }
+
+        .visually-hidden {
+            position: absolute;
+            left: -9999px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden
+        }
+
+        #tab-aktif:checked + .tabs label[for="tab-aktif"],
+        #tab-pasif:checked + .tabs label[for="tab-pasif"] {
+            background: var(--tab-on);
+            border-color: var(--tab-on-border);
+            font-weight: 600;
+        }
+
+        .form {
+            display: grid;
+            gap: 14px;
+            margin-bottom: 16px
+        }
+
+        .row {
+            display: grid;
+            gap: 12px
+        }
+
+        .cols-4 {
+            grid-template-columns: 1fr
+        }
+
+        @media(min-width:920px) {
+            .cols-4 {
+                grid-template-columns: repeat(4,1fr)
+            }
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--panel-2);
+            color: var(--text);
+            font-size: 12px
+        }
+
+        .combobox {
+            background-image: linear-gradient(45deg,transparent 50%,#9ca3af 50%),linear-gradient(135deg,#9ca3af 50%,transparent 50%);
+            background-position: calc(100% - 18px) calc(1em + 2px),calc(100% - 13px) calc(1em + 2px);
+            background-size: 5px 5px,5px 5px;
+            background-repeat: no-repeat
+        }
+
+        /* Bölüm görünürlüğü */
+        .section {
+            display: none
+        }
+
+        #tab-aktif:checked ~ .section-active {
+            display: block
+        }
+
+        #tab-pasif:checked ~ .section-passive {
+            display: block
+        }
+
+        .table-wrap {
+            overflow: hidden;
+            max-height: none
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: var(--panel-2);
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--muted);
+            padding: 6px 8px;
+            border-bottom: 1px solid var(--border);
+            white-space: normal
+        }
+
+        tbody td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+            vertical-align: middle;
+            word-wrap: break-word;
+            white-space: normal
+        }
+
+        tbody tr:hover {
+            background: #f9fafb
+        }
+
+        .badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid var(--border);
+            display: inline-block;
+            line-height: 1.2;
+            white-space: normal;
+            word-break: break-word;
+            position: relative;
+            padding-left: 16px
+        }
+
+            .badge::before {
+                content: "";
+                position: absolute;
+                left: 6px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: #9ca3af
+            }
+
+        .wrap-2 {
+            white-space: normal;
+            word-break: break-word
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start
+        }
+
+            .chips .btn {
+                margin: 2px 0
+            }
+
+        .is-passive {
+            opacity: .82
+        }
+
+            .is-passive:hover {
+                background: #f3f4f6
+            }
+
+        .simple-footer {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px
+        }
+
+        .simple-pager {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+            .simple-pager .btn {
+                background: #eef2ff;
+                border: 1px solid var(--border);
+                padding: 6px 10px;
+                border-radius: 10px;
+                font-size: 12px;
+                line-height: 1
+            }
+
+                .simple-pager .btn.current {
+                    background: var(--tab-on);
+                    border-color: var(--tab-on-border);
+                    font-weight: 600
+                }
+
+                .simple-pager .btn[aria-disabled="true"] {
+                    opacity: .55;
+                    cursor: not-allowed;
+                    pointer-events: none;
+                    background: #fff
+                }
+
+        .simple-meta {
+            color: var(--muted);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+            .simple-meta .sep {
+                opacity: .6
+            }
+
+        /* DOT renkleri */
+        .badge.ok::before {
+            background: #22c55e
+        }
+
+        .badge.soz-6::before, .badge.km-5::before {
+            background: #f59e0b
+        }
+
+        .badge.soz-bitti::before, .badge.km-doldu::before {
+            background: #ef4444
+        }
+
+        .badge.soz-12p::before, .badge.km-20p::before, .badge.km-20::before {
+            background: #3b82f6
+        }
+
+        .badge.passive {
+            color: #6b7280;
+            background: #fff
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <header>
+                <h1>Araç Listesi</h1>
+                <div class="actions-top">
+                    <div class="left"><a class="btn primary" href="1_arac_kayit.html">Araç Kayıt</a></div>
+                    <div class="right"><button class="btn ghost" type="button">CSV Dışa Aktar</button></div>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Sekmeler -->
+                <input class="visually-hidden" type="radio" id="tab-aktif" name="statusView" checked />
+                <input class="visually-hidden" type="radio" id="tab-pasif" name="statusView" />
+
+                <div class="tabs" role="tablist" aria-label="Liste Görünümü">
+                    <label for="tab-aktif" role="tab" aria-controls="list-aktif">Aktif Araçlar</label>
+                    <label for="tab-pasif" role="tab" aria-controls="list-pasif">Pasif Araçlar</label>
+                </div>
+
+                <!-- AKTİF (mevcut filtrelerin TAMAMI aynen kalır) -->
+                <form class="form section section-active" aria-label="Aktif Araç Filtreleri">
+                    <div class="row cols-4">
+                        <div>
+                            <label>Marka</label><input class="combobox" list="markaList" placeholder="Renault" />
+                            <datalist id="markaList"><option>Renault</option><option>Fiat</option><option>Ford</option><option>Toyota</option><option>Volkswagen</option></datalist>
+                        </div>
+                        <div>
+                            <label>Model</label><input class="combobox" list="modelList" placeholder="Megane" />
+                            <datalist id="modelList"><option>Megane</option><option>Clio</option><option>Egea</option><option>Focus</option><option>Corolla</option></datalist>
+                        </div>
+                        <div><label>Plaka</label><input placeholder="34 ABC 123" /></div>
+                        <div><label>Durum</label><select><option value="">Hepsi</option><option>Boşta-Atanmış</option><option>Boşta-Atanmamış</option><option>Zimmetli-Atanmış</option></select></div>
+                    </div>
+                    <div class="row cols-4">
+                        <div><label>Sicil No</label><input placeholder="123456" /></div>
+                        <div><label>Zimmetli Kişi</label><input placeholder="Ad Soyad" /></div>
+                        <div>
+                            <label>Zimmetlenen Bölge</label><input class="combobox" list="bolgeList" placeholder="Bölge" />
+                            <datalist id="bolgeList"><option>Genel Müdürlük Havuz</option><option>Genel Merkez</option><option>İstanbul Surdışı Bölge Md.</option><option>İstanbul Anadolu Bölge Md.</option><option>Ankara Bölge Md.</option><option>İzmir Bölge Md.</option></datalist>
+                        </div>
+                        <div><label>Sözleşme Bitiş Durumu</label><select><option value="">Hepsi</option><option>3 aydan az</option><option>6 aydan az</option><option>12 aydan az</option><option>12 aydan fazla</option><option>Sözleşmesi Bitti</option></select></div>
+                    </div>
+                    <div class="row cols-4">
+                        <div><label>KM Bitiş Durumu</label><select><option value="">Hepsi</option><option>5.000 km’den az</option><option>10.000 km’den az</option><option>20.000 km’den az</option><option>20.000 km +</option><option>KM Limiti Doldu</option></select></div>
+                    </div>
+                </form>
+
+                <!-- PASİF (sadece istenen 5 filtre) -->
+                <form class="form section section-passive" aria-label="Pasif Araç Filtreleri">
+                    <div class="row cols-4">
+                        <div>
+                            <label>Marka</label>
+                            <input class="combobox" list="markaListPasif" placeholder="Renault" />
+                            <datalist id="markaListPasif">
+                                <option>Renault</option>
+                                <option>Fiat</option>
+                                <option>Ford</option>
+                                <option>Toyota</option>
+                                <option>Volkswagen</option>
+                            </datalist>
+                        </div>
+                        <div>
+                            <label>Model</label>
+                            <input class="combobox" list="modelListPasif" placeholder="Megane" />
+                            <datalist id="modelListPasif">
+                                <option>Megane</option>
+                                <option>Clio</option>
+                                <option>Egea</option>
+                                <option>Focus</option>
+                                <option>Corolla</option>
+                            </datalist>
+                        </div>
+                        <div>
+                            <label>Zimmetlenen Bölge</label>
+                            <!-- combobox yok, sabit alan -->
+                            <input value="Genel Müdürlük Havuz" aria-readonly="true" readonly />
+                        </div>
+                        <div>
+                            <label>Sözleşme Bitiş Durumu</label>
+                            <select>
+                                <option value="">Hepsi</option>
+                                <option>3 aydan az</option>
+                                <option>6 aydan az</option>
+                                <option>12 aydan az</option>
+                                <option>12 aydan fazla</option>
+                                <option>Sözleşmesi Bitti</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row cols-4">
+                        <div>
+                            <label>KM Bitiş Durumu</label>
+                            <select>
+                                <option value="">Hepsi</option>
+                                <option>5.000 km’den az</option>
+                                <option>10.000 km’den az</option>
+                                <option>20.000 km’den az</option>
+                                <option>20.000 km +</option>
+                                <option>KM Limiti Doldu</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- AKTİF LİSTE -->
+                <section class="section section-active" id="list-aktif" aria-label="Aktif Araçlar">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>Araç No</th><th>Marka</th><th>Model</th><th>Plaka</th><th>Sicil No</th><th>Zimmetli Kişi</th><th>Zimmetlenen Bölge</th><th>Sözleşme Bitiş</th><th>Sözleşme Bitiş Durumu</th><th>KM Bitiş Durumu</th><th>Durum</th><th>Aksiyon</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1001</td>
+                                    <td>Renault</td>
+                                    <td>Megane</td>
+                                    <td>34 ABC 210</td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td><span class="wrap-2">Genel Müdürlük<wbr> Havuz</span></td>
+                                    <td>2026-01-31</td>
+                                    <td><span class="badge soz-12p">12 aydan fazla</span></td>
+                                    <td><span class="badge km-20p">20.000 km +</span></td>
+                                    <td><span class="badge ok"><span class="wrap-2">Boşta<wbr>-<wbr>Atanmamış</span></span></td>
+                                    <td class="chips"><a class="btn">Düzenle</a><a class="btn">Detay</a></td>
+                                </tr>
+                                <tr>
+                                    <td>1010</td>
+                                    <td>Fiat</td>
+                                    <td>Egea</td>
+                                    <td>34 END 999</td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td>Genel Merkez</td>
+                                    <td>2025-08-31</td>
+                                    <td><span class="badge soz-bitti">Sözleşmesi Bitti</span></td>
+                                    <td><span class="badge km-10">10.000 km’den az</span></td>
+                                    <td><span class="badge">Boşta-Atanmış</span></td>
+                                    <td class="chips"><a class="btn" aria-disabled="true">Düzenle</a><a class="btn">Detay</a></td>
+                                </tr>
+                                <tr>
+                                    <td>1011</td>
+                                    <td>Renault</td>
+                                    <td>Megane</td>
+                                    <td>06 KMD 500</td>
+                                    <td>93690</td>
+                                    <td>Ahmet Özdemir</td>
+                                    <td>İstanbul Anadolu</td>
+                                    <td>2026-03-15</td>
+                                    <td><span class="badge soz-6">6 aydan az</span></td>
+                                    <td><span class="badge km-doldu">KM Limiti Doldu</span></td>
+                                    <td><span class="badge">Zimmetli-Atanmış</span></td>
+                                    <td class="chips"><a class="btn" aria-disabled="true">Düzenle</a><a class="btn">Detay</a></td>
+                                </tr>
+                                <tr>
+                                    <td>1005</td>
+                                    <td>Renault</td>
+                                    <td>Clio</td>
+                                    <td>35 KLM 456</td>
+                                    <td>654321</td>
+                                    <td>Nergis Uçar Özdemir</td>
+                                    <td>İstanbul Anadolu</td>
+                                    <td>2025-10-10</td>
+                                    <td><span class="badge soz-12">12 aydan az</span></td>
+                                    <td><span class="badge km-20">20.000 km’den az</span></td>
+                                    <td><span class="badge">Zimmetli-Atanmış</span></td>
+                                    <td class="chips"><a class="btn" aria-disabled="true">Düzenle</a><a class="btn">Detay</a></td>
+                                </tr>
+                                <tr>
+                                    <td>1006</td>
+                                    <td>Renault</td>
+                                    <td>Clio</td>
+                                    <td>35 PRS 336</td>
+                                    <td>85635</td>
+                                    <td>Mustafa Gözütok</td>
+                                    <td>İstanbul Anadolu</td>
+                                    <td>2025-10-10</td>
+                                    <td><span class="badge soz-12">12 aydan az</span></td>
+                                    <td><span class="badge km-20">20.000 km’den az</span></td>
+                                    <td><span class="badge">Zimmetli-Atanmış</span></td>
+                                    <td class="chips"><a class="btn" aria-disabled="true">Düzenle</a><a class="btn">Detay</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav class="simple-footer" aria-label="Sayfalandırma">
+                        <div class="simple-pager" role="list">
+                            <button class="btn" aria-label="Önceki sayfa" aria-disabled="true">‹</button>
+                            <a class="btn current" href="#" aria-current="page">1</a>
+                            <a class="btn" href="#" title="2. sayfa">2</a>
+                            <button class="btn" aria-label="Sonraki sayfa">›</button>
+                        </div>
+                        <div class="simple-meta"><span class="total-records">Toplam: 80 kayıt</span><span class="sep">•</span><span class="page-count">8 Sayfa</span></div>
+                    </nav>
+                </section>
+
+                <!-- PASİF LİSTE -->
+                <section class="section section-passive" id="list-pasif" aria-label="Pasif Araçlar">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>Araç No</th><th>Marka</th><th>Model</th><th>Plaka</th><th>Zimmetlenen Bölge</th><th>Sözleşme Bitiş</th><th>Sözleşme Bitiş Durumu</th><th>KM Bitiş Durumu</th><th>Durum</th><th>Aksiyon</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr class="is-passive">
+                                    <td>2001</td>
+                                    <td>Renault</td>
+                                    <td>Megane</td>
+                                    <td>34 PSS 001</td>
+                                    <td>Genel Müdürlük Havuz</td>
+                                    <td>2024-06-30</td>
+                                    <td><span class="badge soz-bitti">Sözleşmesi Bitti</span></td>
+                                    <td><span class="badge km-20p">20.000 km +</span></td>
+                                    <td><span class="badge passive">Pasif</span></td>
+                                    <td class="chips"><a class="btn">Yeniden Etkinleştir</a><a class="btn">Detay</a></td>
+                                </tr>
+                                <tr class="is-passive">
+                                    <td>2002</td>
+                                    <td>Renault</td>
+                                    <td>Clio</td>
+                                    <td>34 KLM 332</td>
+                                    <td>Genel Müdürlük Havuz</td>
+                                    <td>2024-06-30</td>
+                                    <td><span class="badge soz-bitti">Sözleşmesi Bitti</span></td>
+                                    <td><span class="badge km-20p">20.000 km +</span></td>
+                                    <td><span class="badge passive">Pasif</span></td>
+                                    <td class="chips"><a class="btn">Yeniden Etkinleştir</a><a class="btn">Detay</a></td>
+                                </tr>
+                                <tr class="is-passive">
+                                    <td>2003</td>
+                                    <td>Fiat</td>
+                                    <td>Egea</td>
+                                    <td>34 ABC 445</td>
+                                    <td>Genel Müdürlük Havuz</td>
+                                    <td>2024-06-30</td>
+                                    <td><span class="badge soz-bitti">Sözleşmesi Bitti</span></td>
+                                    <td><span class="badge km-20p">20.000 km +</span></td>
+                                    <td><span class="badge passive">Pasif</span></td>
+                                    <td class="chips"><a class="btn">Yeniden Etkinleştir</a><a class="btn">Detay</a></td>
+                                </tr>
+                                <tr class="is-passive">
+                                    <td>2004</td>
+                                    <td>Fiat</td>
+                                    <td>Egea</td>
+                                    <td>34 TPK 220</td>
+                                    <td>Genel Müdürlük Havuz</td>
+                                    <td>2024-06-30</td>
+                                    <td><span class="badge soz-bitti">Sözleşmesi Bitti</span></td>
+                                    <td><span class="badge km-20p">20.000 km +</span></td>
+                                    <td><span class="badge passive">Pasif</span></td>
+                                    <td class="chips"><a class="btn">Yeniden Etkinleştir</a><a class="btn">Detay</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav class="simple-footer" aria-label="Sayfalandırma">
+                        <div class="simple-pager" role="list">
+                            <button class="btn" aria-label="Önceki sayfa" aria-disabled="true">‹</button>
+                            <a class="btn current" href="#" aria-current="page">1</a>
+                            <a class="btn" href="#" title="2. sayfa">2</a>
+                            <button class="btn" aria-label="Sonraki sayfa">›</button>
+                        </div>
+                        <div class="simple-meta"><span class="total-records">Toplam: 20 kayıt</span><span class="sep">•</span><span class="page-count">2 Sayfa</span></div>
+                    </nav>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

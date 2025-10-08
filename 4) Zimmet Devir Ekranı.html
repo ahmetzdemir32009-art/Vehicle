@@ -1,0 +1,457 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>4) Zimmet Devir</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --panel: #ffffff;
+            --panel-2: #f8fafc;
+            --muted: #6b7280;
+            --text: #111827;
+            --primary: #2563eb;
+            --border: rgba(0,0,0,.10);
+            --radius: 12px;
+            --shadow: 0 6px 24px rgba(0,0,0,.06);
+            --green: #16a34a;
+            --yellow: #f59e0b;
+            --red: #dc2626;
+            --chip: #eef2ff;
+            --row-ok: #dcfce7;
+            --row-warn: #fef9c3;
+            --row-err: #fee2e2;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+            background: var(--bg);
+            color: var(--text)
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden
+        }
+
+            .card header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px 16px;
+                border-bottom: 1px solid var(--border)
+            }
+
+                .card header h1 {
+                    margin: 0;
+                    font-size: 20px
+                }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: var(--chip);
+            border: 1px solid var(--border);
+            color: #1f2937
+        }
+
+        .content {
+            padding: 18px
+        }
+
+        .actions-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+
+        .top-left, .top-right {
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid var(--border);
+            background: #eef2ff;
+            color: #111827;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block
+        }
+
+            .btn.primary {
+                background: #e0e7ff;
+                border-color: #c7d2fe
+            }
+
+            .btn.warn {
+                background: #fff7ed;
+                border-color: #fed7aa;
+                color: #9a3412
+            }
+
+            .btn.ghost {
+                background: transparent
+            }
+
+        .grid {
+            display: grid;
+            gap: 18px
+        }
+
+        .cols-2 {
+            grid-template-columns: 1fr
+        }
+
+        @media(min-width:1000px) {
+            .cols-2 {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+
+        .form {
+            display: grid;
+            gap: 14px
+        }
+
+        .row {
+            display: grid;
+            gap: 12px
+        }
+
+        .cols-2-row {
+            grid-template-columns: 1fr
+        }
+
+        .cols-3-row {
+            grid-template-columns: 1fr
+        }
+
+        @media(min-width:920px) {
+            .cols-2-row {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .cols-3-row {
+                grid-template-columns: repeat(3,1fr)
+            }
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--panel-2);
+            color: var(--text)
+        }
+
+            input[readonly] {
+                background: #f3f4f6;
+                color: #6b7280
+            }
+
+            input[type=file] {
+                padding: 8px
+            }
+
+        textarea {
+            min-height: 96px;
+            resize: vertical
+        }
+
+        .section {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden
+        }
+
+            .section > header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 14px;
+                background: var(--panel-2);
+                border-bottom: 1px solid var(--border)
+            }
+
+                .section > header h2 {
+                    margin: 0;
+                    font-size: 16px
+                }
+
+            .section .content {
+                padding: 14px 16px
+            }
+
+        .inline {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .note {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .precheck {
+            display: grid;
+            gap: 10px
+        }
+
+            .precheck .item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 8px 10px;
+                background: #fff
+            }
+
+        .ok {
+            background: var(--row-ok)
+        }
+
+        .warn {
+            background: var(--row-warn)
+        }
+
+        .err {
+            background: var(--row-err)
+        }
+
+        .meters {
+            display: grid;
+            gap: 6px
+        }
+
+        meter {
+            width: 100%;
+            height: 12px
+        }
+
+        .actions-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <header>
+                <h1>4) Zimmet Devir</h1>
+                <div class="badges">
+                    <span class="chip">Erişim: <strong>Bölge İdari İşler</strong> / <strong>GM</strong></span>
+                    <span class="chip">GM Onay Durumu: <strong>Taslak</strong></span>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Üst aksiyonlar -->
+                <div class="actions-top">
+                    <div class="top-left">
+                        <a class="btn" href="2_arac_listesi.html">Araç Listesi</a>
+                        <a class="btn" href="3_1_zimmet_talepleri.html">Zimmet Talepleri</a>
+                    </div>
+                    <div class="top-right">
+                        <button class="btn ghost" type="button">Taslak Olarak Kaydet</button>
+                    </div>
+                </div>
+
+                <div class="grid cols-2">
+                    <!-- SOL: Devir Formu -->
+                    <section class="section">
+                        <header><h2>Devir Formu</h2><span class="note">Bölge bazlı araç listelenir, onay GM’de tamamlanır.</span></header>
+                        <div class="content">
+                            <form class="form" aria-label="Zimmet Devir Formu">
+                                <div class="row cols-2-row">
+                                    <div><label>Bölge</label><input value="İstanbul Sürdışı Bölge Md." readonly /></div>
+                                    <div><label>Departman</label><input value="Satış Departmanı" readonly /></div>
+                                </div>
+
+                                <!-- Zimmet Veren / Alan -->
+                                <div class="row cols-2-row">
+                                    <div>
+                                        <label>Zimmet Veren (Humanis)</label>
+                                        <select title="Aktif personel listesi">
+                                            <option>Ali Çetin — 117777</option>
+                                            <option>Mehmet Demir — 118001</option>
+                                            <option selected>Ayşe Telli — 118902</option>
+                                        </select>
+                                        <div class="row cols-2-row" style="margin-top:8px">
+                                            <div><label>Sicil No</label><input value="118902" readonly /></div>
+                                            <div><label>Görev</label><input value="Bölge Satış Uzmanı" readonly /></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label>Zimmet Alan (Humanis)</label>
+                                        <select title="Aktif personel listesi">
+                                            <option selected>Elif Kaya — 116666</option>
+                                            <option>Murat Şahin — 119999</option>
+                                            <option>Sevim Acar — 115555</option>
+                                        </select>
+                                        <div class="row cols-2-row" style="margin-top:8px">
+                                            <div><label>Sicil No</label><input value="116666" readonly /></div>
+                                            <div><label>Görev</label><input value="Satış Temsilcisi" readonly /></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Araç ve KM -->
+                                <div class="row cols-2-row">
+                                    <div>
+                                        <label>Zimmet Aracı (Bölgeye göre)</label>
+                                        <select>
+                                            <option>[VHC-000124] 35 XYZ 456 — Fiat Egea (İzmir)</option>
+                                            <option selected>[VHC-000210] 34 MR 234 — Peugeot 301 (Marmara)</option>
+                                            <option>[VHC-000125] 06 KLM 789 — VW Polo (Ankara)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Zimmet Verilirkenki Araç Kmsi</label>
+                                        <input type="number" min="0" value="88260" />
+                                    </div>
+                                </div>
+
+                                <!-- Neden / Açıklama -->
+                                <div class="row cols-2-row">
+                                    <div>
+                                        <label>Devir Nedeni</label>
+                                        <select>
+                                            <option selected>Görev</option>
+                                            <option>Geçici</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Açıklama</label>
+                                        <input placeholder="Opsiyonel açıklama" />
+                                    </div>
+                                </div>
+
+                                <!-- Belgeler -->
+                                <div class="row cols-2-row">
+                                    <div>
+                                        <label>Sözleşme Kopyası</label>
+                                        <input type="file" accept="application/pdf,image/*" />
+                                    </div>
+                                    <div>
+                                        <label>Ekler (Opsiyonel)</label>
+                                        <input type="file" multiple />
+                                    </div>
+                                </div>
+
+                                <!-- Alt aksiyonlar -->
+                                <div class="actions-bottom">
+                                    <div class="inline">
+                                        <a class="btn" href="3_1_zimmet_talepleri.html">Zimmet Taleplerine Dön</a>
+                                    </div>
+                                    <div class="inline">
+                                        <button class="btn" type="button">Devir Sözleşmesini Yazdır</button>
+                                        <button class="btn primary" type="button">Onaya Gönder (GM)</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+
+                    <!-- SAĞ: Araç Özeti & Ön-Kontroller -->
+                    <section class="section">
+                        <header><h2>Özet & Ön-Kontroller</h2></header>
+                        <div class="content">
+                            <!-- Araç Özeti -->
+                            <div class="inline" style="margin-bottom:10px; flex-wrap:wrap">
+                                <span class="chip">ObjId: <strong>VHC-000210</strong></span>
+                                <span class="chip">Plaka: <strong>34 MR 234</strong></span>
+                                <span class="chip">Marka/Model: <strong>Peugeot 301</strong></span>
+                                <span class="chip">Sözleşme KM: <strong>120.000</strong></span>
+                                <span class="chip">Son KM: <strong>88.260</strong></span>
+                            </div>
+                            <div class="meters" style="margin-bottom:12px">
+                                <label>KM Kullanımı</label>
+                                <meter min="0" max="120000" value="88260">88.260/120.000</meter>
+                                <span class="note">Kalan ≈ 31.740 km</span>
+                            </div>
+
+                            <!-- Ön kontrol sonuçları (statik örnek) -->
+                            <div class="precheck">
+                                <div class="item warn">
+                                    <div><strong>Son KM Güncelliği</strong> — 18 gün önce güncellendi</div>
+                                    <div class="inline"><span class="chip">Uyarı</span></div>
+                                </div>
+                                <div class="item ok">
+                                    <div><strong>Zimmet Alan</strong> üzerinde başka aktif araç yok</div>
+                                    <div class="inline"><span class="chip">Uygun</span></div>
+                                </div>
+                                <div class="item ok">
+                                    <div><strong>Zimmet Veren</strong> üzerinde açık ceza/kaza bulunmuyor</div>
+                                    <div class="inline"><span class="chip">Temiz</span></div>
+                                </div>
+                                <div class="item ok">
+                                    <div><strong>Sözleşme</strong> tarihi geçerli</div>
+                                    <div class="inline"><span class="chip">Geçerli</span></div>
+                                </div>
+                            </div>
+
+                            <!-- Kurallar -->
+                            <details style="margin-top:12px">
+                                <summary style="cursor:pointer">Kurallar</summary>
+                                <ul class="note">
+                                    <li>Zimmet veren üzerinde <em>açık ceza/kaza</em> varsa GM onayı engellenir.</li>
+                                    <li>Zimmet alan üzerinde aktif araç varsa devir yapılamaz.</li>
+                                    <li>Son KM kaydı 15 günden eskiyse uyarı verilir; GM onayında blokaj parametreye bağlıdır.</li>
+                                    <li>Limit dolmuş (≥ sözleşme km) araçlar devredilemez.</li>
+                                </ul>
+                            </details>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>3) Araç Zimmetleme</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --panel: #ffffff;
+            --panel-2: #f8fafc;
+            --muted: #6b7280;
+            --text: #111827;
+            --primary: #2563eb;
+            --border: rgba(0,0,0,.10);
+            --radius: 12px;
+            --shadow: 0 6px 24px rgba(0,0,0,.06);
+            --ok: #16a34a;
+            --warn: #f59e0b;
+            --danger: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+            background: var(--bg);
+            color: var(--text)
+        }
+
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow)
+        }
+
+            .card header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px 16px;
+                border-bottom: 1px solid var(--border)
+            }
+
+                .card header h1 {
+                    margin: 0;
+                    font-size: 20px
+                }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .chip {
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: #f3f4f6;
+            border: 1px solid var(--border);
+            color: #374151
+        }
+
+            .chip.ok {
+                background: #e7f7ee;
+                border-color: #b4e2c6;
+                color: #065f46
+            }
+
+            .chip.info {
+                background: #eef2ff;
+                border-color: #c7d2fe;
+                color: #1e3a8a
+            }
+
+        .content {
+            padding: 18px
+        }
+
+        .actions-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+
+        .top-left, .top-right {
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid var(--border);
+            background: #eef2ff;
+            color: #111827;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block
+        }
+
+            .btn.primary {
+                background: #e0e7ff;
+                border-color: #c7d2fe
+            }
+
+            .btn.ghost {
+                background: transparent
+            }
+
+            .btn.warn {
+                background: #fff7ed;
+                border-color: #fde68a;
+                color: #92400e
+            }
+
+            .btn.success {
+                background: #e7f7ee;
+                border-color: #b4e2c6;
+                color: #065f46
+            }
+
+        .form {
+            display: grid;
+            gap: 14px
+        }
+
+        .row {
+            display: grid;
+            gap: 12px
+        }
+
+        .cols-2 {
+            grid-template-columns: 1fr
+        }
+
+        .cols-3 {
+            grid-template-columns: 1fr
+        }
+
+        @media(min-width:920px) {
+            .cols-2 {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .cols-3 {
+                grid-template-columns: repeat(3,1fr)
+            }
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .req::after {
+            content: " *";
+            color: var(--danger);
+            font-weight: 600
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--panel-2);
+            color: var(--text)
+        }
+
+            input[type=file] {
+                padding: 8px
+            }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical
+        }
+
+        input[readonly], input[disabled] {
+            background: #eef2f7;
+            color: #6b7280
+        }
+
+        .section-title {
+            margin: 8px 0 2px 0;
+            font-size: 13px;
+            color: #374151;
+            font-weight: 600
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 6px 0
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .actions-bottom {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 16px;
+            gap: 10px
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <header>
+                <h1>3) Araç Zimmetleme</h1>
+                <div class="badges">
+                    <span class="chip">Erişim: <strong>Bölge İdari İşler • GM İdari İşler</strong></span>
+                    <span class="chip info">Onay Merci: <strong>GM</strong></span>
+                    <span class="chip">Durum: <strong>Taslak</strong></span>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Üstte yalnız gezinme -->
+                <div class="actions-top">
+                    <div class="top-left">
+                        <a class="btn" href="2_arac_listesi.html">Araç Listesi</a>
+                    </div>
+                    <div class="top-right">
+                        <span class="hint">* Humanis entegrasyonu ile aktif personel doğrulaması yapılır.</span>
+                    </div>
+                </div>
+
+                <form class="form" aria-label="Araç Zimmetleme Formu">
+                    <!-- H U M A N I S -->
+                    <div class="section-title">Zimmet Alan (Humanis)</div>
+                    <div class="row cols-3">
+                        <div>
+                            <label class="req">Sicil No</label>
+                            <input placeholder="Örn: 123456" />
+                        </div>
+                        <div>
+                            <label>Ad Soyad</label>
+                            <input value="Sinan Halimoğlu" readonly />
+                        </div>
+                        <div>
+                            <label>Görevi</label>
+                            <input value="Bölge Satış Uzmanı" readonly />
+                        </div>
+                    </div>
+                    <div class="row cols-3">
+                        <div>
+                            <label>Bölge (Humanis)</label>
+                            <input value="İstanbul Sürdışı Bölge Müdürlüğü" readonly />
+                        </div>
+                        <div>
+                            <label>Departman</label>
+                            <input value="Satış Departmanı" readonly />
+                        </div>
+                        <div>
+                            <label class="req">Zimmet Nedeni</label>
+                            <select>
+                                <option value="">Seçiniz</option>
+                                <option>Görev</option>
+                                <option>Geçici</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <label>Açıklama</label>
+                            <textarea placeholder="Opsiyonel açıklama"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- A R A Ç   S E Ç İ M İ -->
+                    <div class="section-title">Araç Seçimi</div>
+                    <div class="row cols-2">
+                        <div>
+                            <label class="req">Araç</label>
+                            <select title="Sadece kendi bölgenize tahsisli, boşta ve limit dolmamış araçlar listelenir">
+                                <option value="">Seçiniz</option>
+                                <option>[VHC-000210] 34 ABC 210 — Renault Clio — İstanbul Sürdışı</option>
+                                <option disabled>[VHC-000125] 06 KLM 789 — VW Polo — (Limit dolu)</option>
+                                <option disabled>[VHC-000123] 34 ABC 123 — Renault Clio — (Zimmetli)</option>
+                            </select>
+                            <div class="hint">Zimmetli veya limiti dolan araçlar seçilemez.</div>
+                        </div>
+                        <div>
+                            <label class="req">Zimmet Alınan Km</label>
+                            <input type="number" min="0" placeholder="Mevcut km" />
+                        </div>
+                    </div>
+
+                    <div class="row cols-2">
+                        <div>
+                            <label>Sözleşme Kopyası</label>
+                            <input type="file" accept="application/pdf,image/*" />
+                            <div class="hint">Araç sözleşmesi yazdırıldıktan sonra nüshası buradan eklenir.</div>
+                        </div>
+                        <div style="display:flex;align-items:end;gap:10px">
+                            <button class="btn" type="button">Araç Sözleşmesi Yazdır</button>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- A K S İ Y O N L A R -->
+                    <div class="actions-bottom">
+                        <button class="btn ghost" type="reset">Temizle</button>
+                        <button class="btn primary" type="button" title="GM onayına gönder">Onaya Gönder (GM)</button>
+                    </div>
+                </form>
+
+                <!-- Küçük notlar -->
+                <div class="hint" style="margin-top:8px">
+                    • Humanis’te <strong>aktif olmayan</strong> personel bu ekrana düşmez. &nbsp;• Onaylanan zimmetler Bildirimler’e düşer, Araç Listesi güncellenir ve kullanıcının <em>Aracım</em> ekranına kayıt işlenir.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

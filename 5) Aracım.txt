@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>5) Aracım — Özet & Hızlı İşlemler</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --panel: #ffffff;
+            --panel-2: #f8fafc;
+            --muted: #6b7280;
+            --text: #111827;
+            --primary: #2563eb;
+            --border: rgba(0,0,0,.10);
+            --radius: 14px;
+            --shadow: 0 10px 32px rgba(0,0,0,.08);
+            --chip: #eef2ff;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+            background: var(--bg);
+            color: var(--text)
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden
+        }
+
+            .card header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 16px 18px;
+                border-bottom: 1px solid var(--border)
+            }
+
+                .card header h1 {
+                    margin: 0;
+                    font-size: 22px
+                }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: var(--chip);
+            border: 1px solid var(--border);
+            color: #1f2937
+        }
+
+        .content {
+            padding: 18px
+        }
+
+        /* Küçük temsili araç illustrasyonu */
+        .illus {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            max-width: 520px;
+            margin: 0 auto 14px auto;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--panel-2);
+        }
+
+            .illus .svg-wrap {
+                width: 160px; /* küçük tutuldu */
+                height: auto;
+                flex: 0 0 auto;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                background: #fff;
+                display: grid;
+                place-items: center;
+                padding: 8px;
+            }
+
+            .illus .meta {
+                display: grid;
+                gap: 6px
+            }
+
+            .illus .row {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap
+            }
+
+            .illus .badge {
+                background: #f3f4f6;
+                color: #111827;
+                padding: 6px 10px;
+                border-radius: 999px;
+                font-size: 12px;
+                border: 1px solid var(--border)
+            }
+
+        /* Özet */
+        .summary {
+            display: grid;
+            gap: 12px
+        }
+
+            .summary .row {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap
+            }
+
+        .meter-wrap {
+            display: grid;
+            gap: 6px;
+            margin-top: 6px
+        }
+
+        meter {
+            width: 100%;
+            height: 12px
+        }
+
+        /* Alt 3 buton */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-top: 18px
+        }
+
+        @media(min-width:820px) {
+            .quick-actions {
+                grid-template-columns: repeat(3,1fr)
+            }
+        }
+
+        .quick-btn {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: #f6f7fb;
+            text-decoration: none;
+            color: #111827;
+            box-shadow: var(--shadow);
+            transition: transform .08s ease, background .2s ease, box-shadow .2s ease;
+        }
+
+            .quick-btn:hover {
+                background: #eef1f8;
+                transform: translateY(-2px);
+                box-shadow: 0 14px 40px rgba(0,0,0,.12)
+            }
+
+        .ico-wrap {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg,#dbeafe,#ede9fe);
+            border: 1px solid var(--border);
+        }
+
+            .ico-wrap svg {
+                width: 30px;
+                height: 30px;
+                stroke: #1f2937
+            }
+
+        .quick-btn .txt {
+            display: grid
+        }
+
+            .quick-btn .txt strong {
+                font-size: 16px
+            }
+
+            .quick-btn .txt span {
+                font-size: 12px;
+                color: var(--muted)
+            }
+
+        .note {
+            font-size: 12px;
+            color: var(--muted)
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <header>
+                <h1>5) Aracım — Özet</h1>
+                <div class="badges">
+                    <span class="chip">Kullanıcı: <strong>Sinan Halimoğlu (123456)</strong></span>
+                    <span class="chip">Bölge: <strong>İstanbul Sürdışı</strong></span>
+                </div>
+            </header>
+
+            <div class="content">
+
+                <!-- Temsili araç illustrasyonu (inline SVG: her zaman görünür) -->
+                <div class="illus" aria-label="Temsili araç görseli">
+                    <div class="svg-wrap" aria-hidden="true">
+                        <!-- Minimal line-icon araç (stroke) -->
+                        <svg viewBox="0 0 320 140" width="140" height="140" fill="none"
+                             stroke="#1f2937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Araç çizimi">
+                            <!-- gövde -->
+                            <path d="M28 94 L58 64 Q68 54 92 54 H178 Q194 54 206 66 L228 88 H284
+                       Q296 88 302 94 Q308 100 308 108 V112 H16 V102 Q16 94 28 94 Z" fill="#e9efff" />
+                            <!-- tavan/cam -->
+                            <path d="M102 56 H170 Q186 56 198 70 L206 80 H96 L102 56 Z" fill="#d7e5ff" />
+                            <!-- far-sinyal -->
+                            <circle cx="292" cy="104" r="6" fill="#ffd166" stroke="none" />
+                            <!-- tekerlekler -->
+                            <circle cx="100" cy="112" r="16" fill="#111827" />
+                            <circle cx="100" cy="112" r="8" fill="#94a3b8" stroke="none" />
+                            <circle cx="236" cy="112" r="16" fill="#111827" />
+                            <circle cx="236" cy="112" r="8" fill="#94a3b8" stroke="none" />
+                            <!-- kapı çizgisi -->
+                            <line x1="152" y1="80" x2="152" y2="98" />
+                        </svg>
+                    </div>
+                    <div class="meta">
+                        <div class="row">
+                            <span class="badge">Plaka: 34 MR 234</span>
+                            <span class="badge">Peugeot 301</span>
+                            <span class="badge">Son KM: 88.260 (2025-08-20)</span>
+                        </div>
+                        <div class="row">
+                            <span class="badge">ObjId: VHC-000210</span>
+                            <span class="badge">Durum: Zimmetli</span>
+                            <span class="badge">Sözleşme KM: 120.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aracın Özet Bilgileri -->
+                <section class="summary" aria-label="Aracın özet bilgileri">
+                    <div class="meter-wrap">
+                        <label>KM Kullanımı</label>
+                        <meter min="0" max="120000" value="88260">88.260/120.000</meter>
+                        <span class="note">Kalan ≈ 31.740 km</span>
+                    </div>
+                </section>
+
+                <!-- Hızlı İşlem Butonları -->
+                <div class="quick-actions" aria-label="Hızlı işlemler">
+                    <a class="quick-btn" href="5_2_km_guncelleme.html" aria-label="KM Güncelleme sayfasına git">
+                        <div class="ico-wrap" aria-hidden="true">
+                            <!-- Speedometer -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6">
+                                <path d="M12 3a9 9 0 1 0 9 9" />
+                                <path d="M12 12l6-3" />
+                                <circle cx="12" cy="12" r="1.2" fill="#1f2937" />
+                            </svg>
+                        </div>
+                        <span class="txt">
+                            <strong>KM Güncelleme</strong>
+                            <span>Her 15 günde bir giriş</span>
+                        </span>
+                    </a>
+
+                    <a class="quick-btn" href="5_3_gorsel_yukleme.html" aria-label="Görsel Yükleme sayfasına git">
+                        <div class="ico-wrap" aria-hidden="true">
+                            <!-- Camera -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6">
+                                <path d="M4 8h3l2-2h6l2 2h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z" />
+                                <circle cx="12" cy="13" r="3.2" />
+                            </svg>
+                        </div>
+                        <span class="txt">
+                            <strong>Görsel Yükleme</strong>
+                            <span>2 ayda bir iç/dış</span>
+                        </span>
+                    </a>
+
+                    <a class="quick-btn" href="5_1_bakim_girisi.html" aria-label="Bakım Girişi sayfasına git">
+                        <div class="ico-wrap" aria-hidden="true">
+                            <!-- Wrench -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6">
+                                <path d="M21 7a4.5 4.5 0 0 1-6 6L7 21l-4-4 8-8a4.5 4.5 0 0 1 6-6l-2.5 2.5" />
+                                <circle cx="17" cy="7" r="1.2" fill="#1f2937" />
+                            </svg>
+                        </div>
+                        <span class="txt">
+                            <strong>Bakım Girişi</strong>
+                            <span>Periyodik bakım/servis</span>
+                        </span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
